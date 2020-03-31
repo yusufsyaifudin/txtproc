@@ -1,0 +1,80 @@
+package txtproc
+
+import (
+	"bytes"
+	"context"
+	"fmt"
+
+	"github.com/opentracing/opentracing-go"
+)
+
+// WordSeparator will split text into slice of word. Word itself is a group of character.
+// For example: "abc 123 a b 1" will converted into ["abc", " ", "123", " ", "a", " ", "b", " ", "1"]
+func WordSeparator(ctx context.Context, text string) (words []MappedString, err error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "txtproc.WordSeparator")
+	defer func() {
+		ctx.Done()
+		span.Finish()
+	}()
+
+	if text == "" {
+		err = fmt.Errorf("empty text")
+		return
+	}
+
+	words = make([]MappedString, 0)
+
+	var bufOriginal = bytes.Buffer{}
+	var bufNormalized = bytes.Buffer{}
+	var textLength = len(text)
+
+	span.SetTag("length", textLength)
+
+	for i, char := range text {
+		_, isCharSeparator := separatorChar[char]
+		_, isCharWord := whitelistedCharWord[char]
+
+		if !isCharSeparator {
+			bufOriginal.WriteRune(char)
+		}
+
+		if isCharWord {
+			bufNormalized.WriteRune(char)
+		}
+
+		// if current is separator or the end of string, then append the buffer and reset it
+		if isCharSeparator {
+			// this is for the word
+			if bufOriginal.Len() > 0 {
+				words = append(words, MappedString{
+					original:   bufOriginal.String(),
+					normalized: bufNormalized.String(),
+				})
+			}
+
+			words = append(words, MappedString{
+				original:   string(char),
+				normalized: string(char),
+			})
+
+			bufOriginal.Reset()
+			bufNormalized.Reset()
+			continue
+		}
+
+		if i+1 == textLength {
+			if bufOriginal.Len() > 0 {
+				words = append(words, MappedString{
+					original:   bufOriginal.String(),
+					normalized: bufNormalized.String(),
+				})
+			}
+
+			bufOriginal.Reset()
+			bufNormalized.Reset()
+			continue
+		}
+	}
+
+	return
+}
