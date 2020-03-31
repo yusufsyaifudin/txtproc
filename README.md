@@ -1,8 +1,16 @@
 # Text Processor
 
+[![Build Status](https://travis-ci.com/yusufsyaifudin/txtproc.svg?branch=master)](https://travis-ci.com/yusufsyaifudin/txtproc)
+[![codecov](https://codecov.io/gh/yusufsyaifudin/txtproc/branch/master/graph/badge.svg)](https://codecov.io/gh/yusufsyaifudin/txtproc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/yusufsyaifudin/txtproc)](https://goreportcard.com/report/github.com/yusufsyaifudin/txtproc)
+
+#### [View on Sourcegraph](https://sourcegraph.com/github.com/yusufsyaifudin/txtproc)
+
 This is Go module for processing text. Currently only support word splitter.
 
 ## Usage
+
+https://godoc.org/github.com/yusufsyaifudin/txtproc
 
 ```
 go get -v github.com/yusufsyaifudin/txtproc
