@@ -72,14 +72,14 @@ func TestWordSeparators2(t *testing.T) {
 func TestWordSeparators3(t *testing.T) {
 	type testData struct {
 		text string
-		want []MappedString
+		want []*MappedString
 	}
 
 	table := []testData{
 		// space only
 		{
 			text: " ",
-			want: []MappedString{
+			want: []*MappedString{
 				{
 					original:   " ",
 					normalized: " ",
@@ -89,7 +89,7 @@ func TestWordSeparators3(t *testing.T) {
 
 		{
 			text: "nama!",
-			want: []MappedString{
+			want: []*MappedString{
 				{
 					original:   "nama!",
 					normalized: "nama",
@@ -100,7 +100,7 @@ func TestWordSeparators3(t *testing.T) {
 		// check that space in between is okay
 		{
 			text: "nama! 123",
-			want: []MappedString{
+			want: []*MappedString{
 				{
 					original:   "nama!",
 					normalized: "nama",
@@ -119,7 +119,7 @@ func TestWordSeparators3(t *testing.T) {
 		// space in prefix
 		{
 			text: " nama!",
-			want: []MappedString{
+			want: []*MappedString{
 				{
 					original:   " ",
 					normalized: " ",
@@ -134,7 +134,7 @@ func TestWordSeparators3(t *testing.T) {
 		// space in suffix
 		{
 			text: "nama! ",
-			want: []MappedString{
+			want: []*MappedString{
 				{
 					original:   "nama!",
 					normalized: "nama",
@@ -160,7 +160,7 @@ func TestWordSeparators3(t *testing.T) {
 // TestWordSeparator4 one prefix, one suffix and two spaces in between
 func TestWordSeparator4(t *testing.T) {
 	text := " c  c "
-	want := []MappedString{
+	want := []*MappedString{
 		{
 			original:   " ",
 			normalized: " ",
@@ -199,7 +199,7 @@ func TestWordSeparator4(t *testing.T) {
 func TestWordSeparator5(t *testing.T) {
 	text := `a
 `
-	want := []MappedString{
+	want := []*MappedString{
 		{
 			original:   "a",
 			normalized: "a",
@@ -223,7 +223,7 @@ func TestWordSeparator6(t *testing.T) {
 	text := `
 a
 `
-	want := []MappedString{
+	want := []*MappedString{
 		{
 			original:   "\n",
 			normalized: "\n",
@@ -249,7 +249,7 @@ a
 // TestWordSeparator7 Carriage Return line
 func TestWordSeparator7(t *testing.T) {
 	text := "\ra\n"
-	want := []MappedString{
+	want := []*MappedString{
 		{
 			original:   "\r",
 			normalized: "\r",
@@ -284,7 +284,7 @@ func TestWordSeparator8(t *testing.T) {
 // TestWordSeparator9 check tabs
 func TestWordSeparator9(t *testing.T) {
 	text := `a	b`
-	want := []MappedString{
+	want := []*MappedString{
 		{
 			original:   "a",
 			normalized: "a",

@@ -15,5 +15,8 @@ func WordReplacer(ctx context.Context, text string, replacer ReplacerConfig) (ma
 		span.Finish()
 	}()
 
+	// set true, so the `wordSeparator` will replace words based on config data.
+	replacer.enabled = true
+
 	return wordSeparator(ctx, text, replacer)
 }

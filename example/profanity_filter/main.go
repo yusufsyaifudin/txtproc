@@ -11,24 +11,28 @@ type repo struct {
 	badWordsWithPage map[int64]map[string]string
 }
 
-func (r repo) Get(_ context.Context, dataNumber int64) (str, replacement string, err error) {
+func (r repo) Get(_ context.Context, dataNumber int64) (dataReplacer *txtproc.ReplacerData, err error) {
 	m, exist := r.badWordsWithPage[dataNumber]
 	if !exist {
-		return "", "", nil
+		return &txtproc.ReplacerData{}, nil
 	}
 
 	for k, v := range m {
-		return k, v, nil
+		fmt.Println(k, v)
+		return &txtproc.ReplacerData{
+			StringToCompare:   k,
+			StringReplacement: v,
+		}, nil
 	}
 
-	return "", "", nil
+	return &txtproc.ReplacerData{}, nil
 }
 
 func (r repo) Total(_ context.Context) int64 {
 	return int64(len(r.badWordsWithPage))
 }
 
-func newRepos(data map[string]string) txtproc.ReplacerData {
+func newRepos(data map[string]string) txtproc.ReplacerDataSeeder {
 	var badWordsWithPage = make(map[int64]map[string]string)
 	var idx = int64(0)
 	for k, v := range data {

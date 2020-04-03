@@ -39,11 +39,11 @@ func (m *MappedString) IsReplaced() bool {
 // MappedStrings is collection of mapped string
 type MappedStrings struct {
 	originalText string
-	data         []MappedString
+	data         []*MappedString
 }
 
 // GetMappedString returns the collection of mapped string
-func (ms *MappedStrings) GetMappedString() []MappedString {
+func (ms *MappedStrings) GetMappedString() []*MappedString {
 	return ms.data
 }
 

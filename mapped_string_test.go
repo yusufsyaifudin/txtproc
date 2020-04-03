@@ -6,7 +6,7 @@ import (
 )
 
 func TestMappedString_GetOriginal(t *testing.T) {
-	m := MappedString{
+	m := &MappedString{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "****",
@@ -20,7 +20,7 @@ func TestMappedString_GetOriginal(t *testing.T) {
 }
 
 func TestMappedString_GetNormalized(t *testing.T) {
-	m := MappedString{
+	m := &MappedString{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "****",
@@ -34,7 +34,7 @@ func TestMappedString_GetNormalized(t *testing.T) {
 }
 
 func TestMappedString_GetReplaced(t *testing.T) {
-	m := MappedString{
+	m := &MappedString{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "****",
@@ -49,7 +49,7 @@ func TestMappedString_GetReplaced(t *testing.T) {
 
 // TestMappedString_GetReplaced2 when replaced is empty
 func TestMappedString_GetReplaced2(t *testing.T) {
-	m := MappedString{
+	m := &MappedString{
 		original:   "word!",
 		normalized: "word",
 	}
@@ -63,7 +63,7 @@ func TestMappedString_GetReplaced2(t *testing.T) {
 
 func TestMappedStrings_GetMappedString(t *testing.T) {
 	var mappedStrings = MappedStrings{
-		data: []MappedString{
+		data: []*MappedString{
 			{
 				original:   "word!",
 				normalized: "word",
@@ -73,7 +73,7 @@ func TestMappedStrings_GetMappedString(t *testing.T) {
 		originalText: "word!",
 	}
 
-	var want = []MappedString{
+	var want = []*MappedString{
 		{
 			original:   "word!",
 			normalized: "word",
@@ -92,7 +92,7 @@ func TestMappedStrings_GetOriginalText(t *testing.T) {
 	var originalText = "word!"
 
 	var mappedStrings = MappedStrings{
-		data: []MappedString{
+		data: []*MappedString{
 			{
 				original:   "word!",
 				normalized: "word",
@@ -111,7 +111,7 @@ func TestMappedStrings_GetOriginalText(t *testing.T) {
 
 func TestMappedStrings_GetNormalizedText(t *testing.T) {
 	var mappedStrings = MappedStrings{
-		data: []MappedString{
+		data: []*MappedString{
 			{
 				original:   "word!",
 				normalized: "word",
@@ -131,7 +131,7 @@ func TestMappedStrings_GetNormalizedText(t *testing.T) {
 
 func TestMappedStrings_GetReplacedText(t *testing.T) {
 	var mappedStrings = MappedStrings{
-		data: []MappedString{
+		data: []*MappedString{
 			{
 				original:   "word!",
 				normalized: "word",
