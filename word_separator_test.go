@@ -3,7 +3,6 @@ package txtproc
 import (
 	"context"
 	"reflect"
-	"strings"
 	"testing"
 )
 
@@ -11,7 +10,7 @@ func BenchmarkWordSeparator_1Word(b *testing.B) {
 	text := `word`
 
 	for n := 0; n < b.N; n++ {
-		WordSeparator(context.Background(), text)
+		_, _ = WordSeparator(context.Background(), text)
 	}
 }
 
@@ -19,7 +18,7 @@ func BenchmarkWordSeparator_100Words(b *testing.B) {
 	text := `accumsan tortor posuere ac ut consequat semper viverra nam libero justo laoreet sit amet cursus sit amet dictum sit amet justo donec enim diam vulputate ut pharetra sit amet aliquam id diam maecenas ultricies mi eget mauris pharetra et ultrices neque ornare aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis rhoncus urna neque viverra justo nec ultrices dui sapien eget mi proin sed libero enim sed faucibus turpis in eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat sed`
 
 	for n := 0; n < b.N; n++ {
-		WordSeparator(context.Background(), text)
+		_, _ = WordSeparator(context.Background(), text)
 	}
 }
 
@@ -27,7 +26,7 @@ func BenchmarkWordSeparator_200Words(b *testing.B) {
 	text := `fringilla ut morbi tincidunt augue interdum velit euismod in pellentesque massa placerat duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus vestibulum sed arcu non odio euismod lacinia at quis risus sed vulputate odio ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in dictum non consectetur a erat nam at lectus urna duis convallis convallis tellus id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit amet nisl purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac`
 
 	for n := 0; n < b.N; n++ {
-		WordSeparator(context.Background(), text)
+		_, _ = WordSeparator(context.Background(), text)
 	}
 }
 
@@ -35,14 +34,8 @@ func TestWordSeparators(t *testing.T) {
 	text := ` `
 	words, _ := WordSeparator(context.Background(), text)
 
-	expected := make([]string, 0)
-	for _, word := range words {
-		expected = append(expected, word.GetOriginal())
-	}
-
-	res := strings.Join(expected, "")
-	if res != text {
-		t.Errorf("returned '%s' want '%s'", res, text)
+	if words.GetOriginalText() != text {
+		t.Errorf("returned '%s' want '%s'", words.GetOriginalText(), text)
 		t.Fail()
 		return
 	}
@@ -54,14 +47,8 @@ func TestWordSeparators1(t *testing.T) {
 `
 	words, _ := WordSeparator(context.Background(), text)
 
-	expected := make([]string, 0)
-	for _, word := range words {
-		expected = append(expected, word.GetOriginal())
-	}
-
-	res := strings.Join(expected, "")
-	if res != text {
-		t.Errorf("returned '%s' want '%s'", res, text)
+	if words.GetOriginalText() != text {
+		t.Errorf("returned '%s' want '%s'", words.GetOriginalText(), text)
 		t.Fail()
 		return
 	}
@@ -75,14 +62,8 @@ func TestWordSeparators2(t *testing.T) {
 `
 	words, _ := WordSeparator(context.Background(), text)
 
-	expected := make([]string, 0)
-	for _, word := range words {
-		expected = append(expected, word.GetOriginal())
-	}
-
-	res := strings.Join(expected, "")
-	if res != text {
-		t.Errorf("returned '%s' want '%s'", res, text)
+	if words.GetOriginalText() != text {
+		t.Errorf("returned '%s' want '%s'", words.GetOriginalText(), text)
 		t.Fail()
 		return
 	}
@@ -168,8 +149,8 @@ func TestWordSeparators3(t *testing.T) {
 
 	for i, data := range table {
 		words, _ := WordSeparator(context.Background(), data.text)
-		if !reflect.DeepEqual(data.want, words) {
-			t.Errorf("%d want %v but return %v", i, data.want, words)
+		if !reflect.DeepEqual(data.want, words.GetMappedString()) {
+			t.Errorf("%d want %v but return %v", i, data.want, words.GetMappedString())
 			t.Fail()
 			return
 		}
@@ -207,7 +188,7 @@ func TestWordSeparator4(t *testing.T) {
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words) {
+	if !reflect.DeepEqual(want, words.GetMappedString()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -230,7 +211,7 @@ func TestWordSeparator5(t *testing.T) {
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words) {
+	if !reflect.DeepEqual(want, words.GetMappedString()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -258,7 +239,7 @@ a
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words) {
+	if !reflect.DeepEqual(want, words.GetMappedString()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -284,7 +265,7 @@ func TestWordSeparator7(t *testing.T) {
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words) {
+	if !reflect.DeepEqual(want, words.GetMappedString()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -295,6 +276,32 @@ func TestWordSeparator8(t *testing.T) {
 	_, err := WordSeparator(context.Background(), "")
 	if err == nil {
 		t.Errorf("should return error: '%s'", "empty text")
+		t.Fail()
+		return
+	}
+}
+
+// TestWordSeparator9 check tabs
+func TestWordSeparator9(t *testing.T) {
+	text := `a	b`
+	want := []MappedString{
+		{
+			original:   "a",
+			normalized: "a",
+		},
+		{
+			original: "	",
+			normalized: "	",
+		},
+		{
+			original:   "b",
+			normalized: "b",
+		},
+	}
+
+	words, _ := WordSeparator(context.Background(), text)
+	if !reflect.DeepEqual(want, words.GetMappedString()) {
+		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
 	}

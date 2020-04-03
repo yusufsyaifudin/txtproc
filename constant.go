@@ -1,7 +1,9 @@
 package txtproc
 
+// separatorChar is collection of word separator
 var separatorChar = map[rune]bool{
-	' ':  true,
+	' ': true,
+	'	': true,
 	'\n': true,
 	'\r': true,
 }

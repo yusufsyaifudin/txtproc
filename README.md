@@ -73,3 +73,9 @@ BenchmarkWordSeparator_200Words-8          18387             65294 ns/op
 PASS
 ok      ysf/txtproc     5.381s
 ```
+
+## Work In Progress
+
+- [x] Word Splitter (split by space, tab, new line)
+- [x] Word Replacer (replace word with DIY Replacer function)
+- [ ] Profanity Filter
