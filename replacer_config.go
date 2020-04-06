@@ -1,16 +1,19 @@
 package txtproc
 
-import "ysf/txtproc/similarity"
+import (
+	"ysf/txtproc/similarity"
+)
 
-// ReplacerConfig configures the profanity filter struct.
-type ReplacerConfig struct {
-	// this to ensure that we don't call the replacer when not needed
-	// will be true on function `WordReplacer` false by default.
-	enabled bool
+// ProfanityFilterConfig configures the profanity filter struct.
+type ProfanityFilterConfig struct {
+	WordToCompare WordType // which word to compare
+	CaseSensitive bool     // default false
 
-	WordToCompare WordType              // which word to compare
-	ReplacerData  ReplacerDataSeeder    // seed data for the replacement
-	CaseSensitive bool                  // default false
-	Similarity    similarity.Similarity // similarity distance algorithm
-	MinimumScore  float64               // minimum score to make the filter replaces the string, between 0 to 1
+	GoodWordsData         ReplacerDataSeeder    // seed data for whitelisted data
+	GoodWordsSimFunc      similarity.Similarity // similarity distance algorithm
+	GoodWordsMinimumScore float64               // minimum score to make the filter replaces the string, between 0 to 1
+
+	BadWordsData         ReplacerDataSeeder    // seed data for the replacement of bad words
+	BadWordsSimFunc      similarity.Similarity // similarity distance algorithm
+	BadWordsMinimumScore float64               // minimum score to make the filter replaces the string, between 0 to 1
 }
