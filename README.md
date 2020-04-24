@@ -67,9 +67,15 @@ Benchmark on Macbook Pro 16GB, Quad-Core Intel Core i5 2.4Ghz
 goos: darwin
 goarch: amd64
 pkg: ysf/txtproc
-BenchmarkWordSeparator_1Word-8           3089930               386 ns/op
-BenchmarkWordSeparator_100Words-8          37720             31883 ns/op
-BenchmarkWordSeparator_200Words-8          18387             65294 ns/op
+BenchmarkWordSeparator_1Word-8           1845750               644 ns/op
+BenchmarkWordSeparator_100Words-8          31050             38564 ns/op
+BenchmarkWordSeparator_200Words-8          15447             77749 ns/op
 PASS
-ok      ysf/txtproc     5.381s
+ok      ysf/txtproc     6.126s
 ```
+
+## Work In Progress
+
+- [x] Word Splitter (split by space, tab, new line)
+- [x] Word Replacer (replace word with DIY Replacer function)
+- [x] Profanity Filter
