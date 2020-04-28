@@ -79,3 +79,6 @@ ok      ysf/txtproc     6.126s
 - [x] Word Splitter (split by space, tab, new line)
 - [x] Word Replacer (replace word with DIY Replacer function)
 - [x] Profanity Filter
+- [ ] word-level n-grams, for example if text written as `a s u` it will not be detected, but using n-gram, 
+we can detect it using the version `a s u`, `as u`, `a su` and `asu`
+- [ ] Leet speak

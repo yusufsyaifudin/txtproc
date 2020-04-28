@@ -6,7 +6,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
-// ReplacerData is a struct to map what data to be compared, replaced to what
+// BadWordsData is a struct to map what data to be compared, replaced to what
 // and other information you want to carry for example the primary key, etc.
 type ReplacerData struct {
 	StringToCompare   string
@@ -35,7 +35,7 @@ type ReplacerDataSeeder interface {
 	Total(ctx context.Context) int64
 }
 
-// replacerDataDefault will be used when no `ReplacerDataSeeder` passed in `ReplacerConfig`
+// replacerDataDefault will be used when no `ReplacerDataSeeder` passed in `ProfanityFilterConfig`
 type replacerDataDefault struct{}
 
 // Get will not return any string
