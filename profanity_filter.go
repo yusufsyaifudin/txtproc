@@ -3,6 +3,7 @@ package txtproc
 import (
 	"context"
 	"fmt"
+	"math"
 	"strings"
 	"ysf/txtproc/similarity"
 
@@ -64,12 +65,16 @@ func ProfanityFilter(ctx context.Context, text string, filterConfig ProfanityFil
 		return
 	}
 
-	var i = int64(0)
-	for i < filterConfig.GoodWordsData.Total(ctx) {
-		i++
+	var (
+		goodWordTotal    = filterConfig.GoodWordsData.Total(ctx)
+		goodWordPerBatch = filterConfig.GoodWordsData.PerBatch(ctx)
+		goodWordNumBatch = int64(math.Ceil(float64(goodWordTotal) / float64(goodWordPerBatch)))
+	)
+
+	for i := int64(1); i <= goodWordNumBatch; i++ {
 
 		// call get data here to minimize db call if the data from db or external storage
-		var goodWordDataReplacer = &ReplacerData{}
+		var goodWordDataReplacer = make([]*ReplacerData, 0)
 		goodWordDataReplacer, err = filterConfig.GoodWordsData.Get(ctx, i)
 		if err != nil {
 			return
@@ -89,31 +94,42 @@ func ProfanityFilter(ctx context.Context, text string, filterConfig ProfanityFil
 				currentWord = strings.ToLower(currentWord)
 			}
 
-			var score float64 = 0
-			score, err = badWordSimFunc.Compare(ctx, currentWord, goodWordDataReplacer.StringToCompare)
-			if err != nil {
-				err = fmt.Errorf(
-					"error compare string '%s' vs '%s': %s",
-					currentWord, goodWordDataReplacer.StringToCompare, err.Error(),
-				)
-				return
+			for _, goodWord := range goodWordDataReplacer {
+				if goodWord == nil {
+					continue
+				}
+
+				var score float64 = 0
+				score, err = badWordSimFunc.Compare(ctx, currentWord, goodWord.StringToCompare)
+				if err != nil {
+					err = fmt.Errorf(
+						"error compare string '%s' vs '%s': %s",
+						currentWord, goodWord.StringToCompare, err.Error(),
+					)
+					return
+				}
+
+				// when score is higher or equal than minimum score in config, replace it
+				if score >= filterConfig.BadWordsMinimumScore {
+					w.replaced = goodWord.StringReplacement
+					w.isReplaced = true
+					continue
+				}
 			}
 
-			// when score is higher or equal than minimum score in config, replace it
-			if score >= filterConfig.BadWordsMinimumScore {
-				w.replaced = goodWordDataReplacer.StringReplacement
-				w.isReplaced = true
-				continue
-			}
 		}
 	}
 
-	var j = int64(0)
-	for j < filterConfig.BadWordsData.Total(ctx) {
-		j++
+	var (
+		badWordTotal    = filterConfig.BadWordsData.Total(ctx)
+		badWordPerBatch = filterConfig.BadWordsData.PerBatch(ctx)
+		badWordNumBatch = int64(math.Ceil(float64(badWordTotal) / float64(badWordPerBatch)))
+	)
+
+	for j := int64(1); j <= badWordNumBatch; j++ {
 
 		// call get data here to minimize db call if the data from db or external storage
-		var badWordDataReplacer = &ReplacerData{}
+		var badWordDataReplacer = make([]*ReplacerData, 0)
 		badWordDataReplacer, err = filterConfig.BadWordsData.Get(ctx, j)
 		if err != nil {
 			return
@@ -133,21 +149,27 @@ func ProfanityFilter(ctx context.Context, text string, filterConfig ProfanityFil
 				currentWord = strings.ToLower(currentWord)
 			}
 
-			var score float64 = 0
-			score, err = badWordSimFunc.Compare(ctx, currentWord, badWordDataReplacer.StringToCompare)
-			if err != nil {
-				err = fmt.Errorf(
-					"error compare string '%s' vs '%s': %s",
-					currentWord, badWordDataReplacer.StringToCompare, err.Error(),
-				)
-				return
-			}
+			for _, badWord := range badWordDataReplacer {
+				if badWord == nil {
+					continue
+				}
 
-			// when score is higher or equal than minimum score in config, replace it
-			if score >= filterConfig.BadWordsMinimumScore {
-				w.replaced = badWordDataReplacer.StringReplacement
-				w.isReplaced = true
-				continue
+				var score float64 = 0
+				score, err = badWordSimFunc.Compare(ctx, currentWord, badWord.StringToCompare)
+				if err != nil {
+					err = fmt.Errorf(
+						"error compare string '%s' vs '%s': %s",
+						currentWord, badWord.StringToCompare, err.Error(),
+					)
+					return
+				}
+
+				// when score is higher or equal than minimum score in config, replace it
+				if score >= filterConfig.BadWordsMinimumScore {
+					w.replaced = badWord.StringReplacement
+					w.isReplaced = true
+					continue
+				}
 			}
 		}
 

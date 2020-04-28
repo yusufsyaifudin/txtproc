@@ -13,39 +13,57 @@ type dataCollection struct {
 }
 
 type repo struct {
-	wordsMapWithPage map[int64]*dataCollection
+	sliceOfWords []*dataCollection
 }
 
-func (r repo) Get(_ context.Context, dataNumber int64) (dataReplacer *txtproc.ReplacerData, err error) {
-	m, exist := r.wordsMapWithPage[dataNumber]
-	if !exist {
-		return &txtproc.ReplacerData{}, nil
+func (r repo) Get(ctx context.Context, batch int64) (dataReplacer []*txtproc.ReplacerData, err error) {
+	dataReplacer = []*txtproc.ReplacerData{}
+
+	var paginate = func(x []*dataCollection, offset int64, limit int64) []*dataCollection {
+		if offset > int64(len(x)) {
+			offset = int64(len(x))
+		}
+
+		end := offset + limit
+		if end > int64(len(x)) {
+			end = int64(len(x))
+		}
+
+		return x[offset:end]
 	}
 
-	return &txtproc.ReplacerData{
-		StringToCompare:   m.str,
-		StringReplacement: m.strReplacement,
-	}, nil
+	offset := (batch - 1) * int64(len(r.sliceOfWords))
+	data := paginate(r.sliceOfWords, offset, r.PerBatch(ctx))
+	for _, d := range data {
+		dataReplacer = append(dataReplacer, &txtproc.ReplacerData{
+			StringToCompare:   d.str,
+			StringReplacement: d.strReplacement,
+		})
+	}
+
+	return
 }
 
 func (r repo) Total(_ context.Context) int64 {
-	return int64(len(r.wordsMapWithPage))
+	return int64(len(r.sliceOfWords))
+}
+
+func (r repo) PerBatch(_ context.Context) int64 {
+	return int64(len(r.sliceOfWords))
 }
 
 func newRepos(data map[string]string) txtproc.ReplacerDataSeeder {
-	var dataPaginate = make(map[int64]*dataCollection)
-	var idx = int64(0)
-	for k, v := range data {
-		idx++
+	var dataSlices = make([]*dataCollection, 0)
 
-		dataPaginate[idx] = &dataCollection{
+	for k, v := range data {
+		dataSlices = append(dataSlices, &dataCollection{
 			str:            k,
 			strReplacement: v,
-		}
+		})
 	}
 
 	return &repo{
-		wordsMapWithPage: dataPaginate,
+		sliceOfWords: dataSlices,
 	}
 }
 
