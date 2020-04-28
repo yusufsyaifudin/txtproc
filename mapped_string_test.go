@@ -61,6 +61,21 @@ func TestMappedString_GetReplaced2(t *testing.T) {
 	}
 }
 
+func TestMappedString_IsReplaced(t *testing.T) {
+	m := &MappedString{
+		original:   "word!",
+		normalized: "word",
+		replaced:   "",
+		isReplaced: true,
+	}
+
+	if !m.IsReplaced() {
+		t.Errorf("want %v got %v", true, m.IsReplaced())
+		t.Fail()
+		return
+	}
+}
+
 func TestMappedStrings_GetMappedString(t *testing.T) {
 	var mappedStrings = MappedStrings{
 		data: []*MappedString{
