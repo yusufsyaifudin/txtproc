@@ -6,6 +6,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
+// exactMatcher matcher with == comparison
 type exactMatcher struct{}
 
 // Compare return 1 when str1 == str2, otherwise 0

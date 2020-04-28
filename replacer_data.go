@@ -42,7 +42,7 @@ type ReplacerDataSeeder interface {
 	PerBatch(ctx context.Context) int64
 }
 
-// replacerDataDefault will be used when no `ReplacerDataSeeder` passed in `ProfanityFilterConfig`
+// replacerDataDefault will be used when no `ReplacerDataSeeder` passed in `WordReplacerConfig`
 type replacerDataDefault struct{}
 
 // Get will not return any string
