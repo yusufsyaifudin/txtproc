@@ -9,20 +9,11 @@ import (
 )
 
 // WordSeparator will split text into slice of word. Word itself is a group of character.
+// This will split text while holding its structure (spaces, punctuation, etc).
 // For example: "abc 123 a b 1" will converted into ["abc", " ", "123", " ", "a", " ", "b", " ", "1"]
+// It has time complexity of O(N) where N is the length of text.
 func WordSeparator(ctx context.Context, text string) (strCollection MappedStrings, err error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "txtproc.WordSeparator")
-	defer func() {
-		ctx.Done()
-		span.Finish()
-	}()
-
-	return wordSeparator(ctx, text)
-}
-
-// wordSeparator will split text while holding its structure (spaces, punctuation, etc).
-func wordSeparator(ctx context.Context, text string) (strCollection MappedStrings, err error) {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "wordSeparator")
 	defer func() {
 		ctx.Done()
 		span.Finish()
