@@ -22,19 +22,6 @@ func (n inMemory) Get(ctx context.Context, batch int64) (dataReplacer []*txtproc
 		span.Finish()
 	}()
 
-	var paginate = func(x []*txtproc.ReplacerData, offset int64, limit int64) []*txtproc.ReplacerData {
-		if offset > int64(len(x)) {
-			offset = int64(len(x))
-		}
-
-		end := offset + limit
-		if end > int64(len(x)) {
-			end = int64(len(x))
-		}
-
-		return x[offset:end]
-	}
-
 	offset := (batch - 1) * int64(n.perBatch)
 	dataReplacer = paginate(n.sliceOfWords, offset, int64(n.perBatch))
 	return
@@ -78,4 +65,18 @@ func InMemory(data map[string]string, perBatch int) txtproc.ReplacerDataSeeder {
 		perBatch:     perBatch,
 		sliceOfWords: dataSlices,
 	}
+}
+
+// paginate paginate replacer data
+var paginate = func(x []*txtproc.ReplacerData, offset int64, limit int64) []*txtproc.ReplacerData {
+	if offset > int64(len(x)) {
+		offset = int64(len(x))
+	}
+
+	end := offset + limit
+	if end > int64(len(x)) {
+		end = int64(len(x))
+	}
+
+	return x[offset:end]
 }

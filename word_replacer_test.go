@@ -117,7 +117,7 @@ func TestWordReplacer4(t *testing.T) {
 
 	err := WordReplacer(context.Background(), mappedStrings, WordReplacerConfig{
 		WordToCompare:        WordNormalized,
-		CaseSensitive:        true,
+		CaseSensitive:        false,
 		ReplacerDataSeeder:   goodWordData,
 		SimilarityFunc:       goodWordSim,
 		ReplacerMinimumScore: 0,

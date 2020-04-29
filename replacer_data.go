@@ -57,7 +57,7 @@ func (r replacerDataDefault) Get(ctx context.Context, _ int64) (dataReplacer []*
 	return
 }
 
-// Total will always return 1 on default, so only 1 get data (one iteration) to call
+// Total will always return 1 on default, so it will not do any iteration
 func (r replacerDataDefault) Total(ctx context.Context) int64 {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "replacerDataDefault.Total")
 	defer func() {
@@ -65,10 +65,10 @@ func (r replacerDataDefault) Total(ctx context.Context) int64 {
 		span.Finish()
 	}()
 
-	return 1
+	return 0
 }
 
-// PerBatch return 1 since Total only return 1. So the iteration will be 1 only.
+// PerBatch return 1 since Total only return 1. So the iteration will be 0 (total/per batch = 0/1 = 0).
 func (r replacerDataDefault) PerBatch(ctx context.Context) int64 {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "replacerDataDefault.PerBatch")
 	defer func() {

@@ -2,7 +2,9 @@ package repo
 
 import (
 	"context"
+	"reflect"
 	"testing"
+	"ysf/txtproc"
 )
 
 var inMemoryDataTest = map[string]string{
@@ -50,6 +52,23 @@ func TestInMemory_PerBatch(t *testing.T) {
 func TestInMemory(t *testing.T) {
 	if InMemory(map[string]string{}, inMemoryPerBatchTest) == nil {
 		t.Errorf("InMemory should not be nit")
+		t.Fail()
+	}
+}
+
+// Test_paginate when offset is more than length of data, so end will be more than data length too
+func Test_paginate(t *testing.T) {
+	data := []*txtproc.ReplacerData{
+		{
+			StringToCompare:   "word",
+			StringReplacement: "replacement",
+		},
+	}
+
+	x := paginate(data, 2, 1)
+	want := []*txtproc.ReplacerData{}
+	if !reflect.DeepEqual(x, want) {
+		t.Errorf("want %v got %v", want, x)
 		t.Fail()
 	}
 }

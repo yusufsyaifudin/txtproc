@@ -19,7 +19,7 @@ func TestReplacerDataDefault_Total(t *testing.T) {
 	replacer := new(replacerDataDefault)
 
 	total := replacer.Total(context.Background())
-	if total != 1 {
+	if total != 0 {
 		t.Error("replacerDataDefault.Total should return 1")
 		t.Fail()
 	}
