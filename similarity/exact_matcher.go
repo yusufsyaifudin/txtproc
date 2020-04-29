@@ -6,6 +6,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
+// exactMatcher matcher with == comparison
 type exactMatcher struct{}
 
 // Compare return 1 when str1 == str2, otherwise 0
@@ -23,6 +24,7 @@ func (e exactMatcher) Compare(ctx context.Context, str1 string, str2 string) (sc
 	return 0, nil
 }
 
+// ExactMatcher return similarity algorithm with exact comparison between two string
 func ExactMatcher() Similarity {
 	return &exactMatcher{}
 }
