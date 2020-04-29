@@ -4,6 +4,7 @@ import (
 	"context"
 	"reflect"
 	"testing"
+	"ysf/txtproc/word"
 )
 
 func BenchmarkWordSeparator_1Word(b *testing.B) {
@@ -72,85 +73,58 @@ func TestWordSeparators2(t *testing.T) {
 func TestWordSeparators3(t *testing.T) {
 	type testData struct {
 		text string
-		want []*MappedString
+		want []*word.Word
 	}
 
 	table := []testData{
 		// space only
 		{
 			text: " ",
-			want: []*MappedString{
-				{
-					original:   " ",
-					normalized: " ",
-				},
+			want: []*word.Word{
+				word.NewWord(" ", " "),
 			},
 		},
 
 		{
 			text: "nama!",
-			want: []*MappedString{
-				{
-					original:   "nama!",
-					normalized: "nama",
-				},
+			want: []*word.Word{
+				word.NewWord("nama!", "nama"),
 			},
 		},
 
 		// check that space in between is okay
 		{
 			text: "nama! 123",
-			want: []*MappedString{
-				{
-					original:   "nama!",
-					normalized: "nama",
-				},
-				{
-					original:   " ",
-					normalized: " ",
-				},
-				{
-					original:   "123",
-					normalized: "123",
-				},
+			want: []*word.Word{
+				word.NewWord("nama!", "nama"),
+				word.NewWord(" ", " "),
+				word.NewWord("123", "123"),
 			},
 		},
 
 		// space in prefix
 		{
 			text: " nama!",
-			want: []*MappedString{
-				{
-					original:   " ",
-					normalized: " ",
-				},
-				{
-					original:   "nama!",
-					normalized: "nama",
-				},
+			want: []*word.Word{
+				word.NewWord(" ", " "),
+				word.NewWord("nama!", "nama"),
 			},
 		},
 
 		// space in suffix
 		{
 			text: "nama! ",
-			want: []*MappedString{
-				{
-					original:   "nama!",
-					normalized: "nama",
-				},
-				{
-					original:   " ",
-					normalized: " ",
-				},
+			want: []*word.Word{
+				word.NewWord("nama!", "nama"),
+				word.NewWord(" ", " "),
 			},
 		},
 	}
 
 	for i, data := range table {
 		words, _ := WordSeparator(context.Background(), data.text)
-		if !reflect.DeepEqual(data.want, words.GetMappedString()) {
-			t.Errorf("%d want %v but return %v", i, data.want, words.GetMappedString())
+		if !reflect.DeepEqual(data.want, words.GetWords().Get()) {
+			t.Errorf("%d want %v but return %v", i, data.want, words.GetWords().Get())
 			t.Fail()
 			return
 		}
@@ -160,35 +134,17 @@ func TestWordSeparators3(t *testing.T) {
 // TestWordSeparator4 one prefix, one suffix and two spaces in between
 func TestWordSeparator4(t *testing.T) {
 	text := " c  c "
-	want := []*MappedString{
-		{
-			original:   " ",
-			normalized: " ",
-		},
-		{
-			original:   "c",
-			normalized: "c",
-		},
-		{
-			original:   " ",
-			normalized: " ",
-		},
-		{
-			original:   " ",
-			normalized: " ",
-		},
-		{
-			original:   "c",
-			normalized: "c",
-		},
-		{
-			original:   " ",
-			normalized: " ",
-		},
+	want := []*word.Word{
+		word.NewWord(" ", " "),
+		word.NewWord("c", "c"),
+		word.NewWord(" ", " "),
+		word.NewWord(" ", " "),
+		word.NewWord("c", "c"),
+		word.NewWord(" ", " "),
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words.GetMappedString()) {
+	if !reflect.DeepEqual(want, words.GetWords().Get()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -199,19 +155,13 @@ func TestWordSeparator4(t *testing.T) {
 func TestWordSeparator5(t *testing.T) {
 	text := `a
 `
-	want := []*MappedString{
-		{
-			original:   "a",
-			normalized: "a",
-		},
-		{
-			original:   "\n",
-			normalized: "\n",
-		},
+	want := []*word.Word{
+		word.NewWord("a", "a"),
+		word.NewWord("\n", "\n"),
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words.GetMappedString()) {
+	if !reflect.DeepEqual(want, words.GetWords().Get()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -223,23 +173,14 @@ func TestWordSeparator6(t *testing.T) {
 	text := `
 a
 `
-	want := []*MappedString{
-		{
-			original:   "\n",
-			normalized: "\n",
-		},
-		{
-			original:   "a",
-			normalized: "a",
-		},
-		{
-			original:   "\n",
-			normalized: "\n",
-		},
+	want := []*word.Word{
+		word.NewWord("\n", "\n"),
+		word.NewWord("a", "a"),
+		word.NewWord("\n", "\n"),
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words.GetMappedString()) {
+	if !reflect.DeepEqual(want, words.GetWords().Get()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -249,23 +190,14 @@ a
 // TestWordSeparator7 Carriage Return line
 func TestWordSeparator7(t *testing.T) {
 	text := "\ra\n"
-	want := []*MappedString{
-		{
-			original:   "\r",
-			normalized: "\r",
-		},
-		{
-			original:   "a",
-			normalized: "a",
-		},
-		{
-			original:   "\n",
-			normalized: "\n",
-		},
+	want := []*word.Word{
+		word.NewWord("\r", "\r"),
+		word.NewWord("a", "a"),
+		word.NewWord("\n", "\n"),
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words.GetMappedString()) {
+	if !reflect.DeepEqual(want, words.GetWords().Get()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return
@@ -284,23 +216,14 @@ func TestWordSeparator8(t *testing.T) {
 // TestWordSeparator9 check tabs
 func TestWordSeparator9(t *testing.T) {
 	text := `a	b`
-	want := []*MappedString{
-		{
-			original:   "a",
-			normalized: "a",
-		},
-		{
-			original: "	",
-			normalized: "	",
-		},
-		{
-			original:   "b",
-			normalized: "b",
-		},
+	want := []*word.Word{
+		word.NewWord("a", "a"),
+		word.NewWord("	", "	"),
+		word.NewWord("b", "b"),
 	}
 
 	words, _ := WordSeparator(context.Background(), text)
-	if !reflect.DeepEqual(want, words.GetMappedString()) {
+	if !reflect.DeepEqual(want, words.GetWords().Get()) {
 		t.Errorf("want %v but return %v", want, words)
 		t.Fail()
 		return

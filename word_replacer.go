@@ -6,6 +6,7 @@ import (
 	"math"
 	"strings"
 	"ysf/txtproc/similarity"
+	"ysf/txtproc/word"
 
 	"github.com/opentracing/opentracing-go"
 )
@@ -14,7 +15,7 @@ import (
 // This takes O(P*M) = O(N*N) = O(N^2)
 // M is the number of words in text (keep in mind that space is one word).
 // P is the number of batch (page) of replacer data = Total data / Per batch of data
-func WordReplacer(ctx context.Context, mappedStrings *MappedStrings, conf WordReplacerConfig) (err error) {
+func WordReplacer(ctx context.Context, mappedStrings *word.Text, conf WordReplacerConfig) (err error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "txtproc.WordReplacer")
 	defer func() {
 		ctx.Done()
@@ -56,7 +57,7 @@ func WordReplacer(ctx context.Context, mappedStrings *MappedStrings, conf WordRe
 			return
 		}
 
-		for _, w := range mappedStrings.GetMappedString() {
+		for _, w := range mappedStrings.GetWords().Get() {
 			if w.IsReplaced() {
 				continue
 			}
@@ -87,8 +88,7 @@ func WordReplacer(ctx context.Context, mappedStrings *MappedStrings, conf WordRe
 
 				// when score is higher or equal than minimum score in config, replace it
 				if score >= conf.ReplacerMinimumScore {
-					w.replaced = replacerDatum.StringReplacement
-					w.isReplaced = true
+					w.SetReplaced(replacerDatum.StringReplacement)
 					continue
 				}
 			}

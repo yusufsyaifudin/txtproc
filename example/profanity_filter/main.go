@@ -42,4 +42,9 @@ func main() {
 	fmt.Println(words.GetOriginalText())
 	fmt.Println(words.GetNormalizedText())
 	fmt.Println(words.GetReplacedText())
+
+	words.GetWords().Get()[0].SetReplaced("anu")
+	fmt.Println(words.GetOriginalText())   // won't change
+	fmt.Println(words.GetNormalizedText()) // won't change
+	fmt.Println(words.GetReplacedText())
 }
