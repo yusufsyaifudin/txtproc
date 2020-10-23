@@ -2,12 +2,13 @@ package txtproc
 
 import (
 	"context"
+	"ysf/txtproc/word"
 
 	"github.com/opentracing/opentracing-go"
 )
 
 // ProfanityFilter will return `mappedStrings` and replace some text based on your algorithm,
-// then set it into `GetReplaced()` on the `MappedString`.
+// then set it into `GetReplaced()` on the `Word`.
 // The operation takes O(N) + O(P*M) + O(Q*M)
 // So, it O(N) + O(N^2) + O(N^2) because M is more dominant, and substitute M to N.
 // O(N) + 2O(N^2), This is O(max(2(N^2), N)) which is 2O(N^2)
@@ -21,7 +22,7 @@ import (
 // When comparing string from your database and score return higher or equal
 // than minimum score stated in `WordReplacerConfig`, it will be replaced.
 // It's up to you to order the string when `ReplacerDataSeeder.Get` is called.
-func ProfanityFilter(ctx context.Context, text string, filterConfig ProfanityFilterConfig) (mappedStrings *MappedStrings, err error) {
+func ProfanityFilter(ctx context.Context, text string, filterConfig ProfanityFilterConfig) (mappedStrings *word.Text, err error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "txtproc.ProfanityFilter")
 	defer func() {
 		ctx.Done()

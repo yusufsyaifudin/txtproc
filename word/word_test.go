@@ -1,4 +1,4 @@
-package txtproc
+package word
 
 import (
 	"reflect"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestMappedString_GetOriginal(t *testing.T) {
-	m := &MappedString{
+	m := &Word{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "****",
@@ -20,7 +20,7 @@ func TestMappedString_GetOriginal(t *testing.T) {
 }
 
 func TestMappedString_GetNormalized(t *testing.T) {
-	m := &MappedString{
+	m := &Word{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "****",
@@ -34,7 +34,7 @@ func TestMappedString_GetNormalized(t *testing.T) {
 }
 
 func TestMappedString_GetReplaced(t *testing.T) {
-	m := &MappedString{
+	m := &Word{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "****",
@@ -49,7 +49,7 @@ func TestMappedString_GetReplaced(t *testing.T) {
 
 // TestMappedString_GetReplaced2 when replaced is empty
 func TestMappedString_GetReplaced2(t *testing.T) {
-	m := &MappedString{
+	m := &Word{
 		original:   "word!",
 		normalized: "word",
 	}
@@ -62,7 +62,7 @@ func TestMappedString_GetReplaced2(t *testing.T) {
 }
 
 func TestMappedString_IsReplaced(t *testing.T) {
-	m := &MappedString{
+	m := &Word{
 		original:   "word!",
 		normalized: "word",
 		replaced:   "",
@@ -77,27 +77,27 @@ func TestMappedString_IsReplaced(t *testing.T) {
 }
 
 func TestMappedStrings_GetMappedString(t *testing.T) {
-	var mappedStrings = MappedStrings{
-		data: []*MappedString{
-			{
-				original:   "word!",
-				normalized: "word",
-				replaced:   "****",
+	var mappedStrings = Text{
+		data: &Words{
+			words: map[int]*Word{
+				1: {
+					original:   "word!",
+					normalized: "word",
+					replaced:   "****",
+				},
 			},
 		},
 		originalText: "word!",
 	}
 
-	var want = []*MappedString{
-		{
-			original:   "word!",
-			normalized: "word",
-			replaced:   "****",
-		},
+	var want = &Word{
+		original:   "word!",
+		normalized: "word",
+		replaced:   "****",
 	}
 
-	if !reflect.DeepEqual(mappedStrings.GetMappedString(), want) {
-		t.Errorf("want %v got %v", want, mappedStrings.GetMappedString())
+	if !reflect.DeepEqual(mappedStrings.GetWords().words[1], want) {
+		t.Errorf("want %v got %v", want, mappedStrings.GetWords())
 		t.Fail()
 		return
 	}
@@ -106,12 +106,14 @@ func TestMappedStrings_GetMappedString(t *testing.T) {
 func TestMappedStrings_GetOriginalText(t *testing.T) {
 	var originalText = "word!"
 
-	var mappedStrings = MappedStrings{
-		data: []*MappedString{
-			{
-				original:   "word!",
-				normalized: "word",
-				replaced:   "****",
+	var mappedStrings = Text{
+		data: &Words{
+			words: map[int]*Word{
+				1: {
+					original:   "word!",
+					normalized: "word",
+					replaced:   "****",
+				},
 			},
 		},
 		originalText: "word!",
@@ -125,12 +127,14 @@ func TestMappedStrings_GetOriginalText(t *testing.T) {
 }
 
 func TestMappedStrings_GetNormalizedText(t *testing.T) {
-	var mappedStrings = MappedStrings{
-		data: []*MappedString{
-			{
-				original:   "word!",
-				normalized: "word",
-				replaced:   "****",
+	var mappedStrings = Text{
+		data: &Words{
+			words: map[int]*Word{
+				1: {
+					original:   "word!",
+					normalized: "word",
+					replaced:   "****",
+				},
 			},
 		},
 		originalText: "word!",
@@ -145,12 +149,14 @@ func TestMappedStrings_GetNormalizedText(t *testing.T) {
 }
 
 func TestMappedStrings_GetReplacedText(t *testing.T) {
-	var mappedStrings = MappedStrings{
-		data: []*MappedString{
-			{
-				original:   "word!",
-				normalized: "word",
-				replaced:   "****",
+	var mappedStrings = Text{
+		data: &Words{
+			words: map[int]*Word{
+				1: {
+					original:   "word!",
+					normalized: "word",
+					replaced:   "****",
+				},
 			},
 		},
 		originalText: "word!",
