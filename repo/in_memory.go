@@ -11,11 +11,11 @@ import (
 type inMemory struct {
 	length       int64
 	perBatch     int
-	sliceOfWords []*txtproc.ReplacerData
+	sliceOfWords []txtproc.ReplacerData
 }
 
 // Get return the data in slice of registered word in inMemory database
-func (n inMemory) Get(ctx context.Context, batch int64) (dataReplacer []*txtproc.ReplacerData, err error) {
+func (n inMemory) Get(ctx context.Context, batch int64) (dataReplacer []txtproc.ReplacerData, err error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "inMemory.Get")
 	defer func() {
 		ctx.Done()
@@ -51,10 +51,10 @@ func (n inMemory) PerBatch(ctx context.Context) int64 {
 
 // InMemory is repository using Go native slice type
 func InMemory(data map[string]string, perBatch int) txtproc.ReplacerDataSeeder {
-	var dataSlices = make([]*txtproc.ReplacerData, 0)
+	var dataSlices = make([]txtproc.ReplacerData, 0)
 
 	for k, v := range data {
-		dataSlices = append(dataSlices, &txtproc.ReplacerData{
+		dataSlices = append(dataSlices, txtproc.ReplacerData{
 			StringToCompare:   k,
 			StringReplacement: v,
 		})
@@ -68,7 +68,7 @@ func InMemory(data map[string]string, perBatch int) txtproc.ReplacerDataSeeder {
 }
 
 // paginate paginate replacer data
-var paginate = func(x []*txtproc.ReplacerData, offset int64, limit int64) []*txtproc.ReplacerData {
+var paginate = func(x []txtproc.ReplacerData, offset int64, limit int64) []txtproc.ReplacerData {
 	if offset > int64(len(x)) {
 		offset = int64(len(x))
 	}

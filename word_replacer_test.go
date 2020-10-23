@@ -33,7 +33,7 @@ func TestWordReplacer2(t *testing.T) {
 
 	// repo Get is error
 	wantGoodWordDataErr := fmt.Errorf("error getting data")
-	goodWordData.On("Get", mock.Anything, int64(1)).Return([]*ReplacerData{}, wantGoodWordDataErr).Once()
+	goodWordData.On("Get", mock.Anything, int64(1)).Return([]ReplacerData{}, wantGoodWordDataErr).Once()
 
 	err := WordReplacer(context.Background(), mappedStrings, WordReplacerConfig{
 		WordToCompare:        WordNormalized,
@@ -62,7 +62,7 @@ func TestWordReplacer3(t *testing.T) {
 	goodWordData.On("PerBatch", mock.Anything).Return(int64(1)).Once()
 
 	// repo Get will only return one
-	wantGoodWordData := []*ReplacerData{
+	wantGoodWordData := []ReplacerData{
 		{
 			StringToCompare:   "word",
 			StringReplacement: "replacement",
@@ -102,12 +102,11 @@ func TestWordReplacer4(t *testing.T) {
 	goodWordData.On("PerBatch", mock.Anything).Return(int64(1)).Once()
 
 	// repo Get will only return one
-	wantGoodWordData := []*ReplacerData{
+	wantGoodWordData := []ReplacerData{
 		{
 			StringToCompare:   "this",
 			StringReplacement: "****",
 		},
-		nil,
 	}
 	goodWordData.On("Get", mock.Anything, mock.Anything).Return(wantGoodWordData, nil).Twice()
 

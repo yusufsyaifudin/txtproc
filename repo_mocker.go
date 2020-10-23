@@ -12,19 +12,19 @@ type repoMocker struct {
 }
 
 // Get mock the returning data each batch
-func (m repoMocker) Get(ctx context.Context, batch int64) (dataReplacer []*ReplacerData, err error) {
+func (m *repoMocker) Get(ctx context.Context, batch int64) (dataReplacer []ReplacerData, err error) {
 	args := m.Called(ctx, batch)
-	return args.Get(0).([]*ReplacerData), args.Error(1)
+	return args.Get(0).([]ReplacerData), args.Error(1)
 }
 
 // Total mock the number of total data
-func (m repoMocker) Total(ctx context.Context) int64 {
+func (m *repoMocker) Total(ctx context.Context) int64 {
 	args := m.Called(ctx)
 	return args.Get(0).(int64)
 }
 
 // PerBatch mock the number of per batch
-func (m repoMocker) PerBatch(ctx context.Context) int64 {
+func (m *repoMocker) PerBatch(ctx context.Context) int64 {
 	args := m.Called(ctx)
 	return args.Get(0).(int64)
 }

@@ -51,7 +51,7 @@ func WordReplacer(ctx context.Context, mappedStrings *word.Text, conf WordReplac
 	for i := int64(1); i <= replacerNumOfBatch; i++ {
 
 		// call get data here to minimize db call if the data from db or external storage
-		var replacerData = make([]*ReplacerData, 0)
+		var replacerData = make([]ReplacerData, 0)
 		replacerData, err = replacerSeeder.Get(ctx, i)
 		if err != nil {
 			return
@@ -72,10 +72,6 @@ func WordReplacer(ctx context.Context, mappedStrings *word.Text, conf WordReplac
 			}
 
 			for _, replacerDatum := range replacerData {
-				if replacerDatum == nil {
-					continue
-				}
-
 				var score float64 = 0
 				score, err = simFunc.Compare(ctx, currentWord, replacerDatum.StringToCompare)
 				if err != nil {

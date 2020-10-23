@@ -58,7 +58,7 @@ func TestInMemory(t *testing.T) {
 
 // Test_paginate when offset is more than length of data, so end will be more than data length too
 func Test_paginate(t *testing.T) {
-	data := []*txtproc.ReplacerData{
+	data := []txtproc.ReplacerData{
 		{
 			StringToCompare:   "word",
 			StringReplacement: "replacement",
@@ -66,7 +66,7 @@ func Test_paginate(t *testing.T) {
 	}
 
 	x := paginate(data, 2, 1)
-	want := []*txtproc.ReplacerData{}
+	want := make([]txtproc.ReplacerData, 0)
 	if !reflect.DeepEqual(x, want) {
 		t.Errorf("want %v got %v", want, x)
 		t.Fail()

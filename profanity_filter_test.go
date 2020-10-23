@@ -28,7 +28,7 @@ func TestProfanityFilter2(t *testing.T) {
 
 	// repo Get is error
 	wantGoodWordDataErr := fmt.Errorf("error getting data")
-	goodWordData.On("Get", mock.Anything, int64(1)).Return([]*ReplacerData{}, wantGoodWordDataErr).Once()
+	goodWordData.On("Get", mock.Anything, int64(1)).Return([]ReplacerData{}, wantGoodWordDataErr).Once()
 
 	_, err := ProfanityFilter(context.Background(), textWordReplacerTest, ProfanityFilterConfig{
 		GoodWordsReplacerConfig: WordReplacerConfig{
@@ -59,7 +59,7 @@ func TestProfanityFilter3(t *testing.T) {
 
 	// repo Get is error
 	wantBadWordDataErr := fmt.Errorf("error getting data")
-	badWordData.On("Get", mock.Anything, int64(1)).Return([]*ReplacerData{}, wantBadWordDataErr).Once()
+	badWordData.On("Get", mock.Anything, int64(1)).Return([]ReplacerData{}, wantBadWordDataErr).Once()
 
 	_, err := ProfanityFilter(context.Background(), textWordReplacerTest, ProfanityFilterConfig{
 		GoodWordsReplacerConfig: WordReplacerConfig{},

@@ -9,7 +9,7 @@ import (
 )
 
 func TestRepoMocker_Get(t *testing.T) {
-	want := []*ReplacerData{
+	want := []ReplacerData{
 		{
 			StringToCompare:   "word",
 			StringReplacement: "replacement",

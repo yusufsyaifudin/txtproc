@@ -33,7 +33,7 @@ type ReplacerDataSeeder interface {
 	// SELECT * FROM bad_words LIMIT :PerBatch() OFFSET :offset ORDER BY id DESC;
 	// Function will return `strToCompare` as the compared string, and `replacement` as the replacement string.
 	// It is up to you whether you want to return partial replacement like 'f*ck' or full replacement like '****'
-	Get(ctx context.Context, batch int64) (dataReplacer []*ReplacerData, err error)
+	Get(ctx context.Context, batch int64) (dataReplacer []ReplacerData, err error)
 
 	// Total returns the number of total data that need to be checked in collection of bad words.
 	Total(ctx context.Context) int64
@@ -46,14 +46,14 @@ type ReplacerDataSeeder interface {
 type replacerDataDefault struct{}
 
 // Get will not return any string
-func (r replacerDataDefault) Get(ctx context.Context, _ int64) (dataReplacer []*ReplacerData, err error) {
+func (r replacerDataDefault) Get(ctx context.Context, _ int64) (dataReplacer []ReplacerData, err error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "replacerDataDefault.Get")
 	defer func() {
 		ctx.Done()
 		span.Finish()
 	}()
 
-	dataReplacer = []*ReplacerData{}
+	dataReplacer = []ReplacerData{}
 	return
 }
 
