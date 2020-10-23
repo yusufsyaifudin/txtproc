@@ -62,16 +62,17 @@ collection.
 ## Benchmark
 
 Benchmark on Macbook Pro 16GB, Quad-Core Intel Core i5 2.4Ghz
-
+> go test -bench=.  
 ```
 goos: darwin
 goarch: amd64
 pkg: ysf/txtproc
-BenchmarkWordSeparator_1Word-8           1845750               644 ns/op
-BenchmarkWordSeparator_100Words-8          31050             38564 ns/op
-BenchmarkWordSeparator_200Words-8          15447             77749 ns/op
+BenchmarkWordSeparator_1Word-8           2270744               531 ns/op
+BenchmarkWordSeparator_100Words-8          18622             62381 ns/op
+BenchmarkWordSeparator_200Words-8           9567            125014 ns/op
 PASS
-ok      ysf/txtproc     6.126s
+ok      ysf/txtproc     5.811s
+
 ```
 
 ## Work In Progress
