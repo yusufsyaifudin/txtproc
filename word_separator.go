@@ -19,9 +19,6 @@ func WordSeparator(ctx context.Context, text string) (strCollection *word.Text, 
 		span.Finish()
 	}()
 
-	var words = word.NewWords()
-	strCollection = word.NewText(text, words)
-
 	if text == "" {
 		err = ErrEmptyText
 		return
@@ -33,6 +30,7 @@ func WordSeparator(ctx context.Context, text string) (strCollection *word.Text, 
 
 	span.SetTag("length", textLength)
 
+	var words = word.NewWords()
 	idx := 1
 	for i, char := range text {
 		_, isCharSeparator := separatorChar[char]
